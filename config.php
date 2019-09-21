@@ -1,4 +1,6 @@
 <?php
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: *");
 function fDoc_con()
 {
     return mysqli_connect("172.16.0.1", "hackathon", "hackathon", "flatteredDoc");

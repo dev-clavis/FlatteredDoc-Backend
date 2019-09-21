@@ -1,4 +1,6 @@
 <?php
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: *");
 require("config.php");
 $decoded = getJson();
 $mysqli = fDoc_con();
@@ -8,7 +10,7 @@ if ($mysqli->connect_errno) {
     echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
 }
 
-if (!$decoded['id']) {
+if (!isset($decoded['id'])) {
 
     $config = $mysqli->prepare("INSERT INTO UmfrageConfig (name, author) VALUES (?, ?)");
     $config->bind_param("ss", $decoded['name'], $decoded['author']);

@@ -21,17 +21,17 @@ mysqli_select_db($mysqli, "flatteredDoc");
 if (isset($json['aId'])) {
 
     $db_answer = $mysqli->prepare("insert into UmfrageAns (`u_id`,`um_id`,`q_id`,`a_id`) VALUES (?,?,?,?);");
-    $db_answer->bind_param("iiii", $json['uId'], $json['umId'], $json['qId'], $json['aId']);
+    $db_answer->bind_param("siii", $json['uId'], $json['umId'], $json['qId'], $json['aId']);
     if (!$db_answer->execute()) {
         JsonError("Schon beantwortet!");
     };
 
 
-    
+
     mysqli_close($mysqli);
 } else if (isset($json['value'])) {
     $db_answer = $mysqli->prepare("insert into UmfrageAnsText (`u_id`,`um_id`,`q_id`,`content`) VALUES (?,?,?,?);");
-    $db_answer->bind_param("iiii", $json['uId'], $json['umId'], $json['qId'], $json['value']);
+    $db_answer->bind_param("siii", $json['uId'], $json['umId'], $json['qId'], $json['value']);
     if (!$db_answer->execute()) {
         JsonError("Schon beantwortet!");
     };
