@@ -4,10 +4,6 @@ $json = getJson();
 
 //If json_decode failed, the JSON is invalid.
 
-
-
-var_dump($json);
-
 if (!isset($json['uId']) || !isset($json['umId']) || !isset($json['qId'])) {
     die();
 }
@@ -23,11 +19,11 @@ if (isset($json['aId'])) {
     $db_answer = $mysqli->prepare("insert into UmfrageAns (`u_id`,`um_id`,`q_id`,`a_id`) VALUES (?,?,?,?);");
     $db_answer->bind_param("siii", $json['uId'], $json['umId'], $json['qId'], $json['aId']);
     if (!$db_answer->execute()) {
+        var_dump($json);
         JsonError("Schon beantwortet!");
     };
-
-
-
+    
+    echo "{}";
     mysqli_close($mysqli);
 } else if (isset($json['value'])) {
     $db_answer = $mysqli->prepare("insert into UmfrageAnsText (`u_id`,`um_id`,`q_id`,`content`) VALUES (?,?,?,?);");
@@ -35,6 +31,7 @@ if (isset($json['aId'])) {
     if (!$db_answer->execute()) {
         JsonError("Schon beantwortet!");
     };
+    
     mysqli_close($mysqli);
 } else {
     mysqli_close($mysqli);

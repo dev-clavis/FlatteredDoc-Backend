@@ -14,7 +14,8 @@ function getJson()
 
     //Make sure that the content type of the POST request has been set to application/json
     $contentType = isset($_SERVER["CONTENT_TYPE"]) ? trim($_SERVER["CONTENT_TYPE"]) : '';
-    if (strcasecmp($contentType, 'application/json') != 0) {
+    if (strpos($contentType, 'application/json') === false) {
+        var_dump($_SERVER);
         throw new Exception('Content type must be: application/json');
     }
 
