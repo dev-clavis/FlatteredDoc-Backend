@@ -19,7 +19,6 @@ if (isset($json['aId'])) {
     $db_answer = $mysqli->prepare("insert into UmfrageAns (`u_id`,`um_id`,`q_id`,`a_id`) VALUES (?,?,?,?);");
     $db_answer->bind_param("siii", $json['uId'], $json['umId'], $json['qId'], $json['aId']);
     if (!$db_answer->execute()) {
-        var_dump($json);
         JsonError("Schon beantwortet!");
     };
     

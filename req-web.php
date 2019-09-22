@@ -1,7 +1,5 @@
 <?php
 require("config.php");
-header("Content-Type: application/json");
-
 $mysqli = fDoc_con();
 /* check connection */
 if (mysqli_connect_errno()) {
@@ -41,7 +39,7 @@ foreach ($ums as $i) {
             $survey['author'] = $row['author'];
         }
     } else {
-        die();
+        //die();
     }
     mysqli_free_result($result_base);
     $result_questions = mysqli_query($mysqli, "SELECT q_id, q_content, q_type  FROM `UmfrageQuestions` WHERE `um_id` = " . $survey['id'] . ";");
@@ -54,7 +52,7 @@ foreach ($ums as $i) {
             );
         }
     } else {
-        die();
+        
     }
     mysqli_free_result($result_questions);
 
@@ -69,12 +67,13 @@ foreach ($ums as $i) {
             $questions[$row['q_id']]['ans'][] = $a;
         }
     } else {
-        die();
+        
     }
     mysqli_free_result($result_answers);
     $survey[] = $questions;
     $svs[] = $survey;
+    
 }
-
+//var_dump($svs);
 echo json_encode($svs);
  mysqli_close($mysqli);

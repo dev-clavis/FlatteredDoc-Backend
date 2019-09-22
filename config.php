@@ -1,9 +1,17 @@
 <?php
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: *");
+header("Content-Type: application/json; charset=utf-8");
 function fDoc_con()
 {
-    return mysqli_connect("172.16.0.1", "hackathon", "hackathon", "flatteredDoc");
+    $mysqli = mysqli_connect("172.16.0.1", "hackathon", "hackathon", "flatteredDoc");
+
+    if (!$mysqli->set_charset("utf8")) {
+        printf("Error loading character set utf8: %s\n", $mysqli->error);
+        exit();
+    } else {
+    }
+    return $mysqli;
 }
 
 function getJson()
@@ -29,6 +37,7 @@ function getJson()
     }
     return $json;
 }
+
 
 function JsonError($msg)
 {

@@ -1,6 +1,5 @@
 <?php
 require("config.php");
-header("Content-Type: application/json");
 
 if (isset($_GET['id'])) {
 
@@ -37,8 +36,10 @@ if (isset($_GET['id'])) {
         while ($row = mysqli_fetch_assoc($result_questions)) {
             $questions[$row['q_id']] = array(
                 "qId"=> $row['q_id'],
-                "name" => $row['q_content'],
-                "type" => $row['q_type'] 
+                "name" => $row['q_content'],    
+                "type" => $row['q_type'],
+                "count" => 0
+                
             );
         }
     } else {
@@ -46,7 +47,7 @@ if (isset($_GET['id'])) {
     }
     mysqli_free_result($result_questions);
 
-    $result_answers = mysqli_query($mysqli, "SELECT q_id, a_id, content  FROM `UmfrageAnsOption` WHERE `um_id` = ".$survey['id'].";");
+    $result_answers = mysqli_query($mysqli, "SELECT q_id, a_id, content FROM `UmfrageAnsOption` WHERE `um_id` = ".$survey['id'].";");
     if (mysqli_num_rows($result_answers) > 0) {
         while ($row = mysqli_fetch_assoc($result_answers)) {
             
@@ -62,19 +63,26 @@ if (isset($_GET['id'])) {
     }
     mysqli_free_result($result_answers);
 
-    foreach ($questions AS $question) {
-        foreach($question['ans'] AS $answerOption) {
-            $res = mysqli_query($mysqli, "SELECT count(*) as 'a' FROM UmfrageAns 
+    foreach ($questions AS &$question) {
+
+        $rest = mysqli_query($mysqli, "SELECT distinct count(u_id)as 'c' FROM UmfrageAns 
+        WHERE um_id=". $survey['id'] . " 
+        AND q_id=" . $question['qId'] ." LIMIT 1;");
+        $count = mysqli_fetch_assoc($rest);
+
+        $question['count'] = $count['c'];
+
+        foreach($question['ans'] AS &$answerOption) {
+            $res = mysqli_query($mysqli, "SELECT count(*)as 'a' FROM UmfrageAns 
               WHERE um_id=". $survey['id'] . " 
               AND q_id=" . $question['qId'] . " 
               AND a_id=" . $answerOption['optionId']." LIMIT 1;");
             $amount = mysqli_fetch_assoc($res);
             $answerOption['amount'] = $amount['a'];
-            var_dump($answerOption);
         }
     }
 
-    $survey[] = $questions;
+    $survey['questions'] = $questions;
     echo json_encode($survey);
 
     mysqli_close($mysqli);
